@@ -1,48 +1,61 @@
-# Policy Optimization for Financial Decision-Making (LendingClub)
+```markdown
+# 📘 Policy Optimization for Financial Decision-Making (LendingClub)
 
-Short instructions to reproduce EDA, supervised model, and offline RL results.
+This repository contains an end-to-end pipeline for:  
+✔ Exploratory Data Analysis (EDA)  
+✔ A supervised Deep Learning model for loan default prediction  
+✔ An Offline Reinforcement Learning (CQL) policy for loan approval decisions  
+✔ A full analytical comparison and recommendations report (Task 4)
 
----
-
-## 🔧 Prerequisites
-
-- Python **3.9–3.11** recommended  
-- **10–20 GB** free disk (dataset + memmaps)  
-- Git  
-- (Optional) Conda  
+The goal is to **maximize expected financial return** using the LendingClub accepted loan dataset.
 
 ---
 
-## 1. Clone Repo & Place Data
+## 🚀 1. Project Structure
+```
+
+lendingclub-policy-optimization/
+├─ data/                         # dataset + preprocessed files
+├─ models/                       # trained models + scalers + RL policy
+├─ notebooks/                    # Jupyter notebooks for Tasks 1–4
+├─ requirements.txt
+└─ README.md
+
+```
+
+---
+
+## 📥 2. Dataset Download
+
+Download the LendingClub dataset from Kaggle:
+
+🔗 **https://www.kaggle.com/datasets/wordsforthewise/lending-club**
+
+Place the file inside `data/`:
+
+```
+
+accepted_2007_to_2018Q4.csv.gz
+
+````
+
+(This file is NOT included in the repo due to size.)
+
+---
+
+## 🛠 3. Environment Setup
+
+### ✔ Option A — Conda (Recommended)
 
 ```bash
-git clone <your-repo-url>
-cd lendingclub-policy-optimization
-
-mkdir -p data models
-Download dataset from Kaggle:
-https://www.kaggle.com/datasets/wordsforthewise/lending-club
-```
-Place the file here:
-
-bash
-Copy code
-data/accepted_2007_to_2018Q4.csv.gz
-2. Create Environment & Install Packages
-Option A — Conda (recommended)
-bash
-Copy code
 conda create -n lendingclub-env python=3.10 -y
 conda activate lendingclub-env
 pip install -r requirements.txt
-CPU-only PyTorch (optional):
+````
 
-bash
-Copy code
-pip install torch --index-url https://download.pytorch.org/whl/cpu
-Option B — venv / pip
-bash
-Copy code
+### ✔ Option B — venv / pip
+
+```bash
 python -m venv lendingclub-env
 # Windows
 .\lendingclub-env\Scripts\activate
@@ -51,9 +64,11 @@ source lendingclub-env/bin/activate
 
 pip install --upgrade pip
 pip install -r requirements.txt
-Minimum requirements.txt
-nginx
-Copy code
+```
+
+### requirements.txt (included)
+
+```
 numpy
 pandas
 scikit-learn
@@ -63,105 +78,116 @@ joblib
 torch
 d3rlpy
 jupyterlab
-Note: The notebooks include compatibility code for multiple d3rlpy versions.
-If you get CQL API errors, run the diagnostic cell in the Task 3 notebook.
+```
 
-3. Run the Notebooks (order matters)
+> The notebooks include compatibility code to handle different `d3rlpy` versions.
+
+---
+
+## ▶️ 4. Running the Project (Order Matters)
+
 Start JupyterLab:
 
-bash
-Copy code
+```bash
 jupyter lab
-Then run each notebook top-to-bottom:
+```
 
-✔ Task 1
-notebooks/01_task1_EDA_preprocessing.ipynb
-Cleans data and saves:
+Then run notebooks in this exact order:
 
-data/df_encoded.joblib
+---
 
-data/X_preprocessed.joblib
+### 📌 4.1 Task 1 — EDA & Preprocessing
 
-data/y_preprocessed.joblib
+Notebook: `notebooks/01_task1_EDA_preprocessing.ipynb`
 
-✔ Task 2
-notebooks/02_task2_supervised_training.ipynb
-Trains MLP and saves:
+This notebook:
 
-models/best_mlp.pth
+* Loads raw CSV
+* Performs EDA
+* Cleans data
+* Encodes categorical variables
+* Saves:
 
-models/scaler.joblib
+Outputs (saved to `data/`):
 
-task2 metrics
+* `df_encoded.joblib`
+* `X_preprocessed.joblib`
+* `y_preprocessed.joblib`
 
-✔ Task 3
-notebooks/03_task3_offline_rl_cql.ipynb
-Builds MDPDataset and trains offline RL (CQL).
+---
 
-Two scaling modes:
+### 📌 4.2 Task 2 — Supervised Deep Learning Model
 
-Option A (quick) — sample-based scaler (low RAM)
+Notebook: `notebooks/02_task2_supervised_training.ipynb`
 
-Option B (robust) — partial_fit + memmap (no memory spike)
+This notebook:
 
-Saves:
+* Trains MLP classifier
+* Computes AUC & F1
+* Saves trained models
 
-RL policy inside models/cql_policy/
+Outputs (saved to `models/`):
 
-models/policy_values_summary.joblib
+* `best_mlp.pth`
+* `final_mlp.pth`
+* `scaler.joblib`
 
-If memory errors occur → use Option A or reduce batch size.
+---
 
-✔ Task 4
+### 📌 4.3 Task 3 — Offline RL (CQL Policy Learning)
 
-in same notebook
-Loads all artifacts and produces:
+Notebook: `notebooks/task3_offline_rl_&_TASK4.ipynb`
 
-models/task4_analysis.md
+This notebook:
 
-models/figures/
+* Builds RL dataset
+* Computes loan rewards
+* Trains Conservative Q-Learning (CQL)
+* Includes fallback compatibility code for older `d3rlpy` versions
 
-disagreement CSVs
+Outputs (saved to `models/`):
 
+* `cql_policy/`
+* `policy_values_summary.joblib`
 
-### 4. Outputs & Results Location
+---
 
-Models
+### 📌 4.4 Task 4 — Analysis & Final Report
 
-models/best_mlp.pth
+Notebook: `notebooks/task3_offline_rl_&_TASK4.ipynb`
 
-models/cql_policy/
+This notebook:
 
-models/scaler.joblib
+* Evaluates supervised vs RL policies
+* Computes disagreement cases
+* Produces final analysis & summary report
 
-Saved Arrays / Memmaps
-data/X_*_scaled.dat
+Outputs (saved to `models/`):
 
-Analysis & Figures
-models/task4_analysis.md
+* `task4_analysis.md`
+* Task 4 figures + CSVs
+* Summary joblib files
 
-models/figures/
+---
 
-models/rl_vs_supervised_comparison.joblib
+## 🧪 5. Expected Results (Reference)
 
-models/rl_supervised_disagreements_sample.csv
+| Model                              | Value    |
+| ---------------------------------- | -------- |
+| **Supervised Model AUC**           | ~0.717   |
+| **Supervised F1 (best threshold)** | ~0.434   |
+| **Supervised Policy Value**        | −1395.72 |
+| **RL Policy Value (CQL)**          | −1604.37 |
+| **Approve-All Baseline**           | −1651.94 |
+| **Deny-All Baseline**              | 0        |
 
-Numeric Summaries
-models/task4_summary.joblib
+---
 
-models/policy_values_summary.joblib
+## 🆘 6. Troubleshooting
 
-5. Reproducibility Tips & Troubleshooting
-6. 
-If kernel restarts → rerun earlier notebook cells or reload .joblib files.
+* **Cannot find CSV** → Ensure `accepted_2007_to_2018Q4.csv.gz` is in `data/`.
+* **d3rlpy errors** → Run compatibility cell in Task 3.
+* **MemoryError** → Use sample-based scaler or reduce batch size.
+* **Missing test_preds** → Re-run Task 2 evaluation cells.
 
-If d3rlpy constructor/fit errors occur → run the diagnostic cell in Task 3.
-
-If scaling triggers MemoryError →
-
-use sample-based scaling (Option A)
-
-or reduce batch sizes in Option B
-
-Always use RND = 42 for reproducible splits.
 
