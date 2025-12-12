@@ -113,7 +113,8 @@ models/policy_values_summary.joblib
 If memory errors occur → use Option A or reduce batch size.
 
 ✔ Task 4
-notebooks/04_task4_analysis_and_report.ipynb
+
+in same notebook
 Loads all artifacts and produces:
 
 models/task4_analysis.md
@@ -122,21 +123,11 @@ models/figures/
 
 disagreement CSVs
 
-4. Quick Commands (Non-Interactive Execution)
-Install papermill:
 
-bash
-Copy code
-pip install papermill
-Run all notebooks automatically:
+### 4. Outputs & Results Location
 
-bash
-Copy code
-papermill notebooks/01_task1_EDA_preprocessing.ipynb outputs/01_out.ipynb
-papermill notebooks/02_task2_supervised_training.ipynb outputs/02_out.ipynb
-papermill notebooks/03_task3_offline_rl_cql.ipynb outputs/03_out.ipynb
-5. Outputs & Results Location
 Models
+
 models/best_mlp.pth
 
 models/cql_policy/
@@ -160,7 +151,8 @@ models/task4_summary.joblib
 
 models/policy_values_summary.joblib
 
-6. Reproducibility Tips & Troubleshooting
+5. Reproducibility Tips & Troubleshooting
+6. 
 If kernel restarts → rerun earlier notebook cells or reload .joblib files.
 
 If d3rlpy constructor/fit errors occur → run the diagnostic cell in Task 3.
